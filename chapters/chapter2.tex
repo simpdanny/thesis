@@ -97,7 +97,16 @@ L_{MSE}(\bold{x} , \bold{y} , \theta) = || \bold{y} - f_{\theta}(\bold{x}) ||_2 
 
 \subsection{丟棄演算法}
 所有的機器學習模型，都會陷入過度適應（Overfitting）的情況。發生過度適應時，模型能夠在訓練集上達到很好的表現，卻在測試集上表現得越來越差。這時候模型的概括化的能力正逐漸下降，而是單純記憶輸入資料的規律與數字，無法學習到真正幫助辨識學習的本質。
-最常見避免過度適應的方法，就是使用控制調適（Regularization）。使用控制調適，可以縮減模型複雜度，卻不會縮減模型強度，如在損失函數上額外添加控制參數大小的控制子。針對DNN，辛氏提出了丟棄演算法（Dropout）：順向預測時，每個神經元會有$p$的機率直接關閉，無法活化，使得輸出值為$0$。藉由隨機丟棄，可以強迫模型中的各種參數自力更生，而不是相互適應，強迫模型學到更概括化的能力。
+最常見避免過度適應的方法，就是使用控制調適（Regularization）。使用控制調適，可以縮減模型複雜度，卻不會縮減模型強度，如在損失函數上額外添加控制參數大小的控制子。針對DNN，辛氏提出了丟棄演算法（Dropout）：順向預測時，每個神經元會有$p$的機率直接關閉，無法活化，使得輸出值為$0$，如圖\ref{fig:chap2_dropout_b}與圖\ref{fig:chap2_dropout_c}。藉由隨機丟棄，可以強迫模型中的各種參數自力更生，而不是相互適應，強迫模型學到更概括化的能力。
+
+
+\begin{figure}
+\centering
+\subfloat[][未經丟棄的DNN]{\includegraphics[scale=0.15]{images/chap2_dropout_a.png}\label{fig:chap2_dropout_a}}
+\subfloat[][隨機丟棄部份神經元的DNN]{\includegraphics[scale=0.15]{images/chap2_dropout_b.png}\label{fig:chap2_dropout_b}}
+\subfloat[][隨機丟棄部份神經元的DNN]{\includegraphics[scale=0.15]{images/chap2_dropout_c.png}\label{fig:chap2_dropout_c}}
+\caption{丟棄演算法示意圖。其中(b)與(c)是兩種不同的丟棄配置，因為隨機性而有了多樣化，分別是較小的模型，但整合成一個比(a)來得強大的整合模型。}
+\end{figure}
 
 丟棄演算法同時也可以視為隨機整合（Random Ensemble）模型。整合模型（Ensemble Model）在機器學習領域已經被證明是非常強大的模型，藉由多個模型的多樣性（Diversity）各司其職，提昇模型強度。類比在丟棄演算法中，根據不同的丟棄情況，有不同的神經元組合互相整合而成。隨機性造就了多樣性，又同時控制調適，使得模型更不容易過度適應。
 \section{全球音素語料庫(GlobalPhone Corpus)}
@@ -122,8 +131,21 @@ GP先於當時的國內外報章雜誌中蒐集政經相關文字，由指定語
 
 針對任一語言，國際語音學學會會針對其中的每一個可鑑別音（Distinctive Sound），進行音素轉寫（Phonetic Transcription），對應到國際音標上的一種獨立符號。即便物理上兩者呈現不同的聲音，但如果在該語音母語人士人耳中無法鑑別，則必須被標記為同一種音素（Phone）。因此，一種語言通常只會用到部份的國際音標。
 
-國際音標中最常使用的通常為母音（Vowel）與子音（Consonant）的部份，合稱肺部氣流音（Pulmonic）。母音在國際音標中，以母音四邊型（Vowel Quadrilateral）的方式呈現，如圖（TODO）；子音則為一張藉由發音方式以及發音位置交錯整理而成的表格，如圖（TODO）。
+國際音標中最常使用的通常為母音（Vowel）與子音（Consonant）的部份，合稱肺部氣流音（Pulmonic）。母音在國際音標中，以母音四邊型（Vowel Quadrilateral）的方式呈現，如圖\ref{fig:vowel}；子音則為一張藉由發音方式以及發音位置交錯整理而成的表格，如圖\ref{fig:consonant}。
 
+\begin{figure}
+\centering
+\includegraphics[scale=0.4]{images/chap2_vowel_quadrilateral.png}
+\caption{母音四邊形}
+\label{fig:vowel}
+\end{figure}
+
+\begin{figure}
+\centering
+\includegraphics[scale=0.4]{images/chap2_consonant.png}
+\caption{子音表}
+\label{fig:consonant}
+\end{figure}
 母音四邊形類比於人類口腔，每一點代表發音時，舌頭在口腔中的接觸位置。左右代表口腔前後，上下亦然。同一位置上如有兩種音素，右音素為圓唇音（Rounded），一如其名，發音時須圓唇。
 
 子音表格中，左邊根據不同發音方式分類，上邊根據不同發音接觸位置分類。同一位置上如有兩種音素，右音素為聲帶靠近時發出的濁音（Voiced），左音素則為聲帶遠離時發出的清音（Unvoiced）。有些格子為灰色，代表人類不可能發出的發音組合。
@@ -133,7 +155,7 @@ GP先於當時的國內外報章雜誌中蒐集政經相關文字，由指定語
 \section{多語言語音辨識系統}
 多語言語音辨識系統的發展，有各種不同的情景，相關的研究亦有不同的靈感、切入點以及評估方式：
 \subsection{語言混合(Code-Mixing)}
-有些地區的人民，可能因為科技發展、地緣關係的音素，同時熟稔兩種以上的語言，其熟稔程度除了單純的句子交錯、名詞抽換之外，甚至有可能文法參雜，借用別的語言的句式。這些語言混合（Code-Mixing, CM）的核心問題，在於如何準確找到語者切換不同語言時的切換點（Code-Switching Point, CS Point）。如圖（TODO）。
+有些地區的人民，可能因為科技發展、地緣關係的因素，同時熟稔兩種以上的語言，其熟稔程度除了單純的句子交錯、名詞抽換之外，甚至有可能文法參雜，借用別的語言的句式。這些語言混合（Code-Mixing, CM）的核心問題，在於如何準確找到語者切換不同語言時的切換點（Code-Switching Point, CS Point）。如圖\ref{fig:chap2_cs}。
 
 語言混合的例子，隨著時代變遷越來越明顯，如：
 \begin{itemize}
@@ -143,8 +165,13 @@ GP先於當時的國內外報章雜誌中蒐集政經相關文字，由指定語
 \end{itemize}
 語言混合的問題，通常會將語言分為基質語言（Matrix Language）與嵌入語言（Embedded Language），這樣的分類主要根據混合比例。基質語言通常是語者的原生語言，決定該句子的文法句式和主要發音音素。嵌入語言則為客串，若基質語言無法呈現某些關鍵意涵時，語者可能轉而使用嵌入語言表達。然基質語言和嵌入語言的比例不均，在訓練語音辨識系統時，造成系統偏好資料量較多的基質語言，而無法成功辨識資料量較少的嵌入語言。
 
-為了解決資料量不足的問題，可以將基質語言和嵌入語言中近似的發音單位合併訓練。合併單位可能從較高層級的音素層級、越發細緻到更底層的三連音態（Triphone state, or Senone）層級，如圖（TODO）。
-
+為了解決資料量不足的問題，可以將基質語言和嵌入語言中近似的發音單位合併訓練。合併單位可能從較高層級的音素層級、越發細緻到更底層的三連音態（Triphone state, or Senone）層級，如圖\ref{fig:chap2_merge}。
+\begin{figure}
+\centering
+\subfloat[][語言混合資料示例，黃線為語言切換點]{\includegraphics[scale=0.25]{images/chap2_cs.png}\label{fig:chap2_cs}}
+\subfloat[][三連音態合併的深層類神經網路訓練]{\includegraphics[scale=0.25]{images/chap2_merge.png}\label{fig:chap2_merge}}
+\caption{以中文混合英文的語言混合問題與模型訓練方法。}
+\end{figure}
 %因應比例不同，亦可以先訓練嵌入語言偵測器，當偵測器發現時嵌入語言時，將嵌入語言的事後機率拉高，形成模糊化事後機率特徵（Blurred Posteriorgram Features, BPFs）。
 
 在評估語言混合問題時，除了兩種語言的結果都必須分別分析之外，因為嵌入語言的數量較少，討論時往往深入探討嵌入語言的辨識率。
@@ -154,8 +181,26 @@ GP先於當時的國內外報章雜誌中蒐集政經相關文字，由指定語
 跨語言轉移學習是借助豐富大量的來源語言（Source Languages），以幫助資源稀少（Low-resourced）的目標語言（Target Language）訓練語音辨識系統。當資料量過少的時候，一般的機器學習方法就容易陷入瓶頸，遑論亟需資料量的深度學習。
 例如非洲、東亞戰亂地區的語言。這些語言本身收集困難，又因為軍事政治環境的關係，有語音辨識或是關鍵字擷取（Keyterm Extraction）的需求。軍方有可能採集少量的該地聲音作為目標語言。相比之下，GP的資料量非常豐富，也非常乾淨，與資源稀少的語言相當不匹配。
 
-語言間或多或少有共通的聲音特色，常見的轉移學習便是以大量豐富資料前置訓練（Pretraining）一個來源語言的語音辨識系統，再以目標語言的少量資料微調（Fine-tune）成目標語言的語音辨識系統，如圖（TODO）。
+語言間或多或少有共通的聲音特色，常見的轉移學習便是以大量豐富資料前置訓練（Pretraining）一個來源語言的語音辨識系統，再以目標語言的少量資料微調（Fine-tune）成目標語言的語音辨識系統，如圖\ref{fig:chap2_cross}。
+
+\begin{figure}
+\centering
+\subfloat[][以來源語言訓練]{\includegraphics[scale=0.15]{images/chap2_cross_source.png}\label{fig:chap2_cross_source}}
+\subfloat[][以目標語言微調]{\includegraphics[scale=0.15]{images/chap2_cross_target.png}\label{fig:chap2_cross_target}}
+\subfloat[][微調後模型同時包含兩者資訊]{\includegraphics[scale=0.15]{images/chap2_cross_finetune.png}\label{fig:chap2_cross_finetune}}
+\caption{訓練跨語言轉移學習類神經網路，由左至右依序訓練，箭頭則是訓練時從輸出反向傳播至輸入的方向。}
+\label{fig:chap2_cross}
+\end{figure}
+
+
 \subsection{多語言共享學習(Multilingual Sharing)}
-結合上述的情景，多語言語音辨識系統的關鍵，便是能否在多如繁星的各種語言中，找尋共通的資訊，彼此輔助學習。一來減少對單一語言的資料量依賴性，二來可以提供更多語言的語音辨識系統。這包含了許多種不同層級的共享，如語言混合問題中提到的發音單位共享，或是跨語言轉移學習中提到的模型微調。
+結合上述的情景，多語言語音辨識系統的關鍵，便是能否在多如繁星的各種語言中，找尋共通的資訊，彼此輔助學習。一來減少對單一語言的資料量依賴性，二來可以提供更多語言的語音辨識系統，如圖\ref{fig:chap2_multilingual}。這包含了許多種不同層級的共享，像是語言混合問題中提到的發音單位共享，或是跨語言轉移學習中提到的模型微調。
 
 但這個問題並不像語言混合一樣針對嵌入語言，也不似跨語言轉移學習問題中一樣針對目標語言。多語言共享學習希望能找出不同語言中的共享精華，例如全球音素集，或是更細緻的全球音態集（Global Senone Set），因而對待每個語言的比重平等，旨在希望不同語言間的資訊可以互惠，而不是單方面的施與受。在評估表現時，須特別注意多個語言表現的整體性，以免顧此失彼。
+
+\begin{figure}
+\centering
+\includegraphics[scale=0.4]{images/chap2_multilingual}
+\caption{多語言共享學習，四個語言各自獨立評估卻又相輔相成，互相學習。}
+\label{fig:chap2_multilingual}
+\end{figure}

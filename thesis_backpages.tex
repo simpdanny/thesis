@@ -12,9 +12,18 @@
 \bibliography{thesis_bib}
 
 
-%%% 附錄
+%%% 
 %\input{my_appendix.tex}
-
+\newpage
+\chapter*{\protect\makebox[10cm][s]{附錄：全球音素資料庫}} % \makebox{} is fragile; need protect
+\phantomsection % for hyperref to register this
+\addcontentsline{toc}{chapter}{附錄：全球音素資料庫}
+\section*{圖}
+{
+\centering
+\includegraphics[scale=0.5]{images/chap2_dnn.png}
+補充說明補充說明
+}
 %%% 自傳
 %\newpage
 %\chapter*{\protect\makebox[5cm][s]{\nameVita}} % \makebox{} is fragile; need protect
