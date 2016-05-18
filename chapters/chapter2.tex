@@ -35,7 +35,7 @@ ReLU(x) = max( 0 , x )
 z_i = \sum_{k=1}^{D} w_{ki}^{(H)}h_{k}^{(H)} + b_{i}^{(H)} 
 \end{equation}
 當深層類神經網路用作多類別的分類器時，邏輯子會通過軟性最大化轉換（Softmax），變成類似機率分佈的分類輸出：
-\begin{equation}
+\begin{equation} \label{eq:softmax}
 \hat{y}_i = \frac{e^{z_i}}{\sum_{k=1}^{C}e^{z_k} }
 \end{equation}
 當深層類神經網路用作多類別的回歸器時，則直接輸出邏輯子的值：
